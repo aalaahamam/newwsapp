@@ -6,24 +6,67 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsapp/Data/cubit/Getnews/getnews_cubit.dart';
+import 'package:newsapp/screens/second.dart';
 
-class FirtScreen extends StatelessWidget {
+class FirtScreen extends StatefulWidget {
   FirtScreen({super.key});
+
+  @override
+  State<FirtScreen> createState() => _FirtScreenState();
+}
+
+class _FirtScreenState extends State<FirtScreen> 
+with TickerProviderStateMixin {
+      late AnimationController  _slideLogocontrol;
+      late AnimationController  _fadeTextcontroller;
+      
+ @override
+  void initState(){
+
+super.initState();
+
+_slideLogocontrol=AnimationController(vsync: this,duration: Duration(milliseconds:1500 ));
+_fadeTextcontroller=AnimationController(vsync: this,duration: Duration(seconds: 3));
+
+_slideLogocontrol.forward();
+_fadeTextcontroller.forward();
+
+  }
+    
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+  Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) => second(),
+                              ));
+
+          },
+          child: const Icon(
+            Icons.favorite_border,
+            color: Colors.white,
+          ),
+        ),
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
           height: 30,
         ),
-        ElevatedButton(
-            onPressed: () async {
-              context.read<GetNewsCubit>().getNews();
-            },
-            child: Text("Get Updated News")),
+        FadeTransition(
+          opacity: _fadeTextcontroller,
+          child: ElevatedButton(
+              onPressed: () async {
+                context.read<GetNewsCubit>().getNews();
+              },
+              child: FadeTransition(
+                opacity: _fadeTextcontroller,
+                child: Text("Get Updated News"))),
+        ),
         SizedBox(
           height: 30,
         ),
